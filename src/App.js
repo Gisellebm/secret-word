@@ -1,7 +1,7 @@
 import { wordsList } from './data/words';
 import './App.css';
 import StartScreen from './components/StartScreen';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Game from './components/Game';
 import GameOver from './components/GameOver';
 
@@ -27,32 +27,28 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
     // picks a random category
     const categories = Object.keys(words);
     const category = categories[Math.floor(Math.random() * Object.keys(categories).length)];
     
     // pick a random word
     const word = words[category][Math.floor(Math.random() * words[category].length)];
-    console.log(word);
-    console.log(category);
 
     return {word, category};
-  }
+  }, [words]);
 
   // starts the secret word game
-  const startGame = () => {
+  const startGame = useCallback(() => {
     // clear all letters
     setGuessedLetters([]);
 
     // pick word and category
     const {word, category} = pickWordAndCategory();
-    console.log(word, category);
 
     // create an array of letters
     let wordLetters = word.split('');
     wordLetters = wordLetters.map((letter) => letter.toLowerCase());
-    console.log(wordLetters);
 
     // fill states
     setPickWord(word);
@@ -60,12 +56,14 @@ function App() {
     setLetters(wordLetters)
 
     setGameStage(stages[1].name);
-  }
+  }, [pickWordAndCategory]);
 
   // process the letter input
   const verifyLetter = (letter) => {
     
-    const normalizedLetter = letter.toLowerCase();
+    const normalizedLetter = String(letter).toLowerCase();
+
+
 
     // check if letter has already been utilized
 
