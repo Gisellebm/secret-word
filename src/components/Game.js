@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import './Game.css'
 const Game = ({verifyLetter, pickedWord, pickedCategory, letters, guessedLetters, wrongLetters, guesses, score}) => {
     const [letter, setLetter] = useState('')
+    const letterInputRef = useRef(null)
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -9,6 +10,8 @@ const Game = ({verifyLetter, pickedWord, pickedCategory, letters, guessedLetters
         verifyLetter(letter)
 
         setLetter('')
+
+        letterInputRef.current.focus()
     }
     return (
         <div className="game">
@@ -38,6 +41,7 @@ const Game = ({verifyLetter, pickedWord, pickedCategory, letters, guessedLetters
                         required 
                         onChange={(e) => setLetter(e.target.value)}
                         value={letter}
+                        ref={letterInputRef}
                     />
                     <button onClick={verifyLetter}>Jogar</button>
                 </form>
